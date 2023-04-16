@@ -6,11 +6,16 @@ import { styles } from './src/styles';
 export default function App() {
   const [ jokes, setJokes] = useState();
   const [ index, setIndex ] = useState(0);
-  useEffect( () => {
-    fetch('https://api.sampleapis.com/jokes/goodJokes')
-    .then(response=> response.json())
-    .then(setJokes);
-  }, []);
+
+  const getJokes = async () => { // Here we fetch the jokes
+    const resp = await fetch('https://api.sampleapis.com/jokes/goodJokes');
+    const json = await resp.json();
+    setJokes(json); // Shuffle the jokes before setting
+  }
+
+  useEffect(() => { getJokes(); }, []); // Run getJokes once at start
+
+
   const getNextJoke = () => {
     if(index < jokes.length -1) setIndex(index+1)
     else setIndex(0)
